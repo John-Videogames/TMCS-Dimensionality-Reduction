@@ -9,6 +9,7 @@ numpy array.
 
 import numpy as np
 from collections import defaultdict
+import rmsd
 
 
 def cast_positive_int(in_string: str) -> int:
@@ -82,7 +83,9 @@ class XYZFile:
             elements = line.split()[1:]
             elements = np.asfarray(elements, float)
             frame.extend(elements)
-        return np.array(frame)
+        frame=np.array(frame).reshape(-1,3)
+        frame = frame - rmsd.centroid(frame)
+        return frame.ravel()
 
     def parse_xyz_file(self, filename: str):
         """
