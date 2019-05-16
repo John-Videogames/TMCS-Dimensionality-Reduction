@@ -30,19 +30,17 @@ class PCAResults:
         """Return all eigenvectors"""
         return self.pca.components_
     
-    
-        
+
 if __name__ == "__main__":
-    
-    #From preprocessing: create input_file
+    # From preprocessing: create input_file
     input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
-    
-    #Example how to use the PCAResults class
-    #create PCA object
+    print(input_file.frames.shape)
+    # Example how to use the PCAResults class
+    # create PCA object
     PCA_test = PCAResults(input_file) 
-    #obtain variance for all PCA components as array
+    # Obtain variance for all PCA components as array
     variances = PCA_test.get_comp_variance()
-    #obtain nth eigenvector as array
+    # Obtain nth eigenvector as array
     eigenvector_1 = PCA_test.get_nth_eigenvector(1)
-    #obtain all eigenvectors as matrix
+    # Obtain all eigenvectors as matrix
     eigenvector_matrix = PCA_test.get_all_eigenvectors()
