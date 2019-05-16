@@ -178,7 +178,7 @@ class XYZFile:
         :param file_name:
         :return:
         """
-        with open(file_name,'w') as out_file:
+        with open(file_name, 'w') as out_file:
             for frame in self.frames:
                 out_file.write(str(self.num_atoms)+'\n')
                 out_file.write('Shifted XYZ\n')
