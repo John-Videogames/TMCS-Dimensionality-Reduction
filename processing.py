@@ -64,6 +64,17 @@ class PCAResults:
             print("Data has not been inverse transformed yet. Inverse transformation will be done automatically now")
             self.inversetransform_data()
         return self.inversetransformed_data
+    
+    def num_important_components(self, threshold):
+        """
+        Returns the number of components
+        required to capture a certain
+        amount of the variance.
+        :param threshold:
+        :return:
+        """
+        assert threshold >= 1.0 and threshold <= 0.0, "Threshold must be in the range (0.0, 1.0)"
+        return np.argmax(np.cumsum(self.pca.explained_variance_ratio_) > threshold)
 
 
 
