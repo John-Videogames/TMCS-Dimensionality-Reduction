@@ -1,7 +1,8 @@
 """Code to process the input matrix via PCA"""
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import matplotlib
+matplotlib.use("TkAgg")
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()
@@ -75,7 +76,7 @@ if __name__ == "__main__":
     ###########################################
 
     # From preprocessing: create input_file
-    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
+    input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
 
     # Create PCA object with full PCA
     PCA_test = PCAResults(input_file)
@@ -87,7 +88,7 @@ if __name__ == "__main__":
     eigenvector_matrix = PCA_test.get_all_eigenvectors()
 
     # Or create PCA object with PCA of n components, e.g. 2
-    PCA_test_2 = PCAResults(input_file, 2)
+    PCA_test_2 = PCAResults(input_file, 27)
     # Transform data based on PCA fit
     PCA_test_2.transform_data()
 
@@ -100,7 +101,7 @@ if __name__ == "__main__":
 
     # Write inverse tranformed data as xyz - visualize in VMD
     input_file.frames = PCA_test_2.get_inversetransform_data()
-    input_file.write_out("PCA_out_test.xyz")
+    input_file.write_out("./Resources/trajectory_PCA_2019-05-16_03-03-39-PM.xyz")
 
 
 
