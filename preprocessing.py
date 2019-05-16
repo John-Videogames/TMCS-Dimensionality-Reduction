@@ -1,3 +1,4 @@
+import numpy as np
 class XYZFile:
     """
     Class for an xyz file that
@@ -13,17 +14,14 @@ class XYZFile:
         return f"{self.filename}, with {self.num_atoms} atoms in {self.num_frames} frames"
 
     def parse_one_frame(self, lines):
-        frame = np.array([3 * len(lines)])
-        #for line in lines:
-        elements = lines[0].split()
-        del elements[0]
-        elements=np.array(elements)
-        elements = np.array(elements)
-        elements.astype(np.float)
-        x=elements[0]+elements[1]
-        #print(x)
+        frame = []
+        for line in lines:
+            elements = lines[0].split()
+            del elements[0]
+            elements = np.asfarray(elements,float)
+            frame.extend(elements)
 
-        print(elements)
+        return frame
         """
         Parses a simple frame into
         a 3xN vector.
