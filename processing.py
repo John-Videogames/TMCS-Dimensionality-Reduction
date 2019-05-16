@@ -76,6 +76,9 @@ class PCAResults:
         assert threshold <= 1.0 and threshold >= 0.0, "Threshold must be in the range (0.0, 1.0)"
         return np.argmax(np.cumsum(self.pca.explained_variance_ratio_) > threshold)
 
+    def get_specific_inversetransformed_component(self, component):
+        """Return inverse transformed vector in original XYZ coordinates for a specific PCA component"""
+        return np.dot(self.get_transformed_data().T[:, component - 1].reshape(-1,1), self.pca.components_[component-1].reshape(1,-1)) + self.pca.mean_
 
 if __name__ == "__main__":
 
@@ -112,6 +115,11 @@ if __name__ == "__main__":
     # Write inverse tranformed data as xyz - visualize in VMD
     input_file.frames = PCA_test_2.get_inversetransform_data()
     input_file.write_out("./Resources/trajectory_PCA_2019-05-16_03-03-39-PM.xyz")
+
+    #Get one specific inverse transform
+    input_file.frames = PCA_test_2.get_specific_inversetransformed_component(2)
+    input_file.write_out("PCA_out_test2.xyz")
+
 
 
 
