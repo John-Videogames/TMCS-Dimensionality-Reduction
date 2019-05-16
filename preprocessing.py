@@ -9,7 +9,7 @@ numpy array.
 
 import numpy as np
 from collections import defaultdict
-
+import rmsd
 
 def cast_positive_int(in_string: str) -> int:
     """
@@ -47,14 +47,36 @@ class XYZFile:
         self.num_frames = 0
         self.atom_labels = None
         self.frames = self.parse_xyz_file(filename)
+        self.minimise_rmsd()
 
     def __str__(self):
         return f"{self.filename}, with {self.num_atoms} atoms in {self.num_frames} frames"
 
+    def minimise_rmsd(self, method="kabsch"):
+        """
+        Rotates the frames to minimise their
+        RMSD from the first frame, mutating the input
+        structure.
+        :param method:
+        :return:
+        """
+        if method == "kabsch":
+            rotation_func = rmsd.kabsch_rotate
+        elif method == "quaternion_rmsd":
+            rotation_func = rmsd.quaternion_rotate
+        else:
+            raise ValueError("Bad rotation method provided.")
+
+        first_frame = self.frames[0, :].reshape(-1, 3)
+        for i, other_frame in enumerate(self.frames[1:, :], 1):
+            other_frame = other_frame.reshape(-1, 3)
+            other_frame = rmsd.kabsch_rotate(other_frame, first_frame).ravel()
+            self.frames[i, :] = other_frame
+
     def parse_atom_labels(self, lines: list) -> list:
         """
         Parses a simple frame into a
-        3N array of which atomic is in which
+        3N array of which atom is in which
         position.
         :param lines:
         :return:
@@ -68,6 +90,17 @@ class XYZFile:
             seen_atoms[atom] += 1
         assert len(atom_labels) == self.num_atoms * 3, "Did not find 3N atomic labels."
         return atom_labels
+
+    def parse_atom_types(self, lines: list) -> list:
+        """
+        Parses a simple frame into a
+        a list of atom types.
+        :param lines:
+        :return:
+        """
+        atom_types = [line.split()[0].strip() for line in lines]
+        assert len(atom_types) == self.num_atoms, f"Did not find {self.num_atoms} atomic types."
+        return atom_types
 
     @staticmethod
     def parse_one_frame(lines: list):
@@ -123,3 +156,4 @@ class XYZFile:
 
 if __name__ == "__main__":
     input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
+    x, y = rmsd.get_coordinates_xyz("./Resources/malonaldehyde_IRC.xyz")
