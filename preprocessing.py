@@ -9,9 +9,11 @@ numpy array.
 
 import numpy as np
 from collections import defaultdict
+import periodictable
 import rmsd
 
-def cast_positive_int(in_string: str) -> int:
+
+def cast_positive_int(in_string) -> int:
     """
     Checks that a string is a valid
     positive integer
@@ -45,7 +47,7 @@ class XYZFile:
         self.filename = filename
         self.num_atoms = 0  # Set this in "parse_xyz_file"
         self.num_frames = 0
-        self.atom_labels = None
+        self.atom_types = None
         self.frames = self.parse_xyz_file(filename, translate)
         self.minimise_rmsd()
 
@@ -73,18 +75,27 @@ class XYZFile:
             other_frame = rotation_func(other_frame, first_frame).ravel()
             self.frames[i, :] = other_frame
 
-    def parse_atom_labels(self, lines: list) -> list:
+    @property
+    def atom_masses(self):
+        """
+        Returns a list of atomic masses using
+        the periodictable module (and a small
+        quantity of filthy black magic)
+        :return:
+        """
+        return np.array([getattr(periodictable, symbol).mass for symbol in self.atom_types])
+
+    @property
+    def atom_labels(self) -> list:
         """
         Parses a simple frame into a
         3N array of which atom is in which
         position.
-        :param lines:
         :return:
         """
         seen_atoms = defaultdict(lambda: 0)
         atom_labels = []
-        for line in lines:
-            atom = line.split()[0]
+        for atom in self.atom_types:
             atom = f"{atom}{seen_atoms[atom]}"
             atom_labels.extend([f"{atom}_x", f"{atom}_y", f"{atom}_z"])
             seen_atoms[atom] += 1
@@ -120,6 +131,7 @@ class XYZFile:
         frame = np.array(frame).reshape(-1, 3)
         if translate:
             frame -= rmsd.centroid(frame)
+
         return frame.ravel()
 
     def parse_xyz_file(self, filename: str, translate: bool):
@@ -127,6 +139,7 @@ class XYZFile:
         Loads in an .xyz file into
         a set of 3N atom coordinates x M steps.
         :param filename:
+        :param translate:
         :return:
         """
 
@@ -139,7 +152,7 @@ class XYZFile:
             self.num_frames = cast_positive_int(len(lines) / (self.num_atoms + xyz_header_lines))
 
             frames = np.empty([self.num_frames, self.num_atoms * 3])
-            self.atom_labels = self.parse_atom_labels(lines[xyz_header_lines: xyz_header_lines + self.num_atoms])
+            self.atom_types = self.parse_atom_types(lines[xyz_header_lines: xyz_header_lines + self.num_atoms])
             for i in range(self.num_frames):
                 start_index = i * (self.num_atoms + xyz_header_lines) + xyz_header_lines
                 end_index = (i + 1) * (self.num_atoms + xyz_header_lines)
@@ -158,8 +171,28 @@ class XYZFile:
 
         return frames
 
+    def write_out(self, file_name):
+        """
+        Writes out the contents of this
+        to a new xyz file
+        :param file_name:
+        :return:
+        """
+        with open(file_name,'w') as out_file:
+            for frame in self.frames:
+                out_file.write(str(self.num_atoms)+'\n')
+                out_file.write('Shifted XYZ\n')
+                for index in range(len(frame)//3):
+                    label = self.atom_labels[index]
+                    x = frame[3 * index]
+                    y = frame[3 * index + 1]
+                    z = frame[3 * index + 2]
+                    out_file.write(f"{label}\t{x}\t{y}\t{z}")
 
 
 if __name__ == "__main__":
     input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz", translate=True)
-    x, y = rmsd.get_coordinates_xyz("./Resources/malonaldehyde_IRC.xyz")
+    input_file.write_out("./Resources/malonaldehyde_IRC_Shifted.xyz")
+    print(input_file.atom_masses)
+    print(input_file.atom_labels)
+    print(input_file.atom_types)

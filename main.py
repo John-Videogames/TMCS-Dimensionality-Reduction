@@ -11,5 +11,6 @@ from plotting import *
 
 if __name__ == "__main__":
     input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
-    print(input_file.frames)
-    print(input_file.atom_labels)
+    print(input_file.frames.shape)
+    PCA_test = PCAResults(input_file)
+    print(PCA_test.pca.components_)
