@@ -63,7 +63,6 @@ if __name__ == "__main__":
     # obtain nth eigenvector as array
     eigenvector_1 = PCA_test.get_nth_eigenvector(1)
     # obtain all eigenvectors as matrix
-    
     eigenvector_matrix = PCA_test.get_all_eigenvectors()
 
     #or create PCA object with PCA of n components, e.g. 2
