@@ -41,12 +41,12 @@ class XYZFile:
     Class for an xyz file that
     creates a trajectory.
     """
-    def __init__(self, filename):
+    def __init__(self, filename, translate=False):
         self.filename = filename
         self.num_atoms = 0  # Set this in "parse_xyz_file"
         self.num_frames = 0
         self.atom_labels = None
-        self.frames = self.parse_xyz_file(filename)
+        self.frames = self.parse_xyz_file(filename, translate)
         self.minimise_rmsd()
 
     def __str__(self):
@@ -70,7 +70,7 @@ class XYZFile:
         first_frame = self.frames[0, :].reshape(-1, 3)
         for i, other_frame in enumerate(self.frames[1:, :], 1):
             other_frame = other_frame.reshape(-1, 3)
-            other_frame = rmsd.kabsch_rotate(other_frame, first_frame).ravel()
+            other_frame = rotation_func(other_frame, first_frame).ravel()
             self.frames[i, :] = other_frame
 
     def parse_atom_labels(self, lines: list) -> list:
@@ -103,11 +103,13 @@ class XYZFile:
         return atom_types
 
     @staticmethod
-    def parse_one_frame(lines: list):
+    def parse_one_frame(lines: list, translate):
         """
         Parses a simple frame into
         a 3xN vector.
         :param lines:
+        :param translate: -- Do we shift with respect
+        to the centroid of the molecule.
         :return:
         """
         frame = []
@@ -115,11 +117,12 @@ class XYZFile:
             elements = line.split()[1:]
             elements = np.asfarray(elements, float)
             frame.extend(elements)
-        frame=np.array(frame).reshape(-1,3)
-        frame = frame - rmsd.centroid(frame)
+        frame = np.array(frame).reshape(-1, 3)
+        if translate:
+            frame -= rmsd.centroid(frame)
         return frame.ravel()
 
-    def parse_xyz_file(self, filename: str):
+    def parse_xyz_file(self, filename: str, translate: bool):
         """
         Loads in an .xyz file into
         a set of 3N atom coordinates x M steps.
@@ -149,13 +152,14 @@ class XYZFile:
                                                            """
 
                 frame_lines = lines[start_index: end_index]
-                frame = self.parse_one_frame(frame_lines)
+                frame = self.parse_one_frame(frame_lines, translate)
                 frames[i, :] = frame
                 assert len(frame_lines) == self.num_atoms
 
         return frames
 
 
+
 if __name__ == "__main__":
-    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
+    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz", translate=True)
     x, y = rmsd.get_coordinates_xyz("./Resources/malonaldehyde_IRC.xyz")
