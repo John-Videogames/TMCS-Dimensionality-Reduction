@@ -196,5 +196,7 @@ if __name__ == "__main__":
     print(input_file.atom_masses)
     print(input_file.atom_labels)
     print(input_file.atom_types)
+
     print(input_file.num_atoms)
     print(input_file.frames[0])
+

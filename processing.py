@@ -1,7 +1,8 @@
 """Code to process the input matrix via PCA"""
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import matplotlib
+matplotlib.use("TkAgg")
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()
@@ -63,6 +64,17 @@ class PCAResults:
             print("Data has not been inverse transformed yet. Inverse transformation will be done automatically now")
             self.inversetransform_data()
         return self.inversetransformed_data
+    
+    def num_important_components(self, threshold):
+        """
+        Returns the number of components
+        required to capture a certain
+        amount of the variance.
+        :param threshold:
+        :return:
+        """
+        assert threshold >= 1.0 and threshold <= 0.0, "Threshold must be in the range (0.0, 1.0)"
+        return np.argmax(np.cumsum(self.pca.explained_variance_ratio_) > threshold)
 
     def get_specific_inversetransformed_component(self, component):
         """Return inverse transformed vector in original XYZ coordinates for a specific PCA component"""
@@ -77,7 +89,7 @@ if __name__ == "__main__":
     ###########################################
 
     # From preprocessing: create input_file
-    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
+    input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
 
     # Create PCA object with full PCA
     PCA_test = PCAResults(input_file)
@@ -89,7 +101,7 @@ if __name__ == "__main__":
     eigenvector_matrix = PCA_test.get_all_eigenvectors()
 
     # Or create PCA object with PCA of n components, e.g. 2
-    PCA_test_2 = PCAResults(input_file, 2)
+    PCA_test_2 = PCAResults(input_file, 27)
     # Transform data based on PCA fit
     PCA_test_2.transform_data()
 
@@ -102,7 +114,7 @@ if __name__ == "__main__":
 
     # Write inverse tranformed data as xyz - visualize in VMD
     input_file.frames = PCA_test_2.get_inversetransform_data()
-    input_file.write_out("PCA_out_test.xyz")
+    input_file.write_out("./Resources/trajectory_PCA_2019-05-16_03-03-39-PM.xyz")
 
     #Get one specific inverse transform
     input_file.frames = PCA_test_2.get_specific_inversetransformed_component(2)
