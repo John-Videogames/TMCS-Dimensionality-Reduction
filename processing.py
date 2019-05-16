@@ -64,7 +64,9 @@ class PCAResults:
             self.inversetransform_data()
         return self.inversetransformed_data
 
-
+    def get_specific_inversetransformed_component(self, component):
+        """Return inverse transformed vector in original XYZ coordinates for a specific PCA component"""
+        return np.dot(self.get_transformed_data().T[:, component - 1].reshape(-1,1), self.pca.components_[component-1].reshape(1,-1)) + self.pca.mean_
 
 if __name__ == "__main__":
 
@@ -101,6 +103,11 @@ if __name__ == "__main__":
     # Write inverse tranformed data as xyz - visualize in VMD
     input_file.frames = PCA_test_2.get_inversetransform_data()
     input_file.write_out("PCA_out_test.xyz")
+
+    #Get one specific inverse transform
+    input_file.frames = PCA_test_2.get_specific_inversetransformed_component(2)
+    input_file.write_out("PCA_out_test2.xyz")
+
 
 
 
