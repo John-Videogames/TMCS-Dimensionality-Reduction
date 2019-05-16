@@ -1,15 +1,11 @@
-
-import os
-import numpy as np
-
-class XYZFile():
+class XYZFile:
     """
     Class for an xyz file that
     creates a trajectory.
     """
     def __init__(self, filename):
         self.filename = filename
-        self.num_atoms = 0 # Set this in "parse_xyz_file"
+        self.num_atoms = 0  # Set this in "parse_xyz_file"
         self.num_frames = 0
         self.frames = self.parse_xyz_file(filename)
 
@@ -32,6 +28,8 @@ class XYZFile():
         :param filename:
         :return:
         """
+
+        assert filename.endswith(".xyz"), "File must be in .xyz format."
 
         with open(filename, "r") as infile:
             lines = infile.readlines()
@@ -62,7 +60,7 @@ class XYZFile():
                                                            Got {frame_num_atoms}, expected {self.num_atoms}.
                                                            """
 
-                frame_lines = lines[start_index : end_index]
+                frame_lines = lines[start_index: end_index]
                 frame = self.parse_one_frame(frame_lines)
                 frames.append(frame)
                 assert len(frame_lines) == self.num_atoms
