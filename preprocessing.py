@@ -184,7 +184,7 @@ class XYZFile:
                 out_file.write(str(self.num_atoms)+'\n')
                 out_file.write('Shifted XYZ\n')
                 for index in range(len(frame)//3):
-                    label = self.atom_labels[index]
+                    label = self.atom_types[index]
                     x = frame[3 * index]
                     y = frame[3 * index + 1]
                     z = frame[3 * index + 2]
