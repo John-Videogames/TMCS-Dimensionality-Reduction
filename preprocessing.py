@@ -84,6 +84,8 @@ class XYZFile:
             elements = np.asfarray(elements, float)
             frame.extend(elements)
         frame=np.array(frame).reshape(-1,3)
+
+        # shift coordinates
         frame = frame - rmsd.centroid(frame)
         return frame.ravel()
 
@@ -123,6 +125,27 @@ class XYZFile:
 
         return frames
 
+    def writeOutXYYZ(self, fileName):
+        #print(self.frames)
+
+
+        fileOut = open(fileName,'w+')
+
+        for frame in self.frames:
+
+            fileOut.write(str(self.num_atoms)+'\n')
+            fileOut.write('Shifted XYZ'+'\n')
+
+            for index in range(len(frame)//3):
+                x = frame[3 * index]
+                y = frame[3 * index + 1]
+                z = frame[3 * index + 2]
+                fileOut.write(str(self.atom_labels[index])+'\t'+str(x)+'\t'+str(y)+'\t'+str(z)+'\n')
+
+
+
+
 
 if __name__ == "__main__":
     input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
+    input_file.writeOutXYYZ("./Resources/malonaldehyde_IRC_Shifted.xyz")
