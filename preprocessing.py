@@ -1,5 +1,6 @@
 
 import numpy as np
+from collections import defaultdict
 
 def cast_num_atoms(num_atoms):
     """
@@ -35,20 +36,30 @@ class XYZFile:
         self.filename = filename
         self.num_atoms = 0  # Set this in "parse_xyz_file"
         self.num_frames = 0
+        self.atom_labels = None
         self.frames = self.parse_xyz_file(filename)
 
     def __str__(self):
         return f"{self.filename}, with {self.num_atoms} atoms in {self.num_frames} frames"
 
-    def parse_one_frame(self, lines):
-        frame = []
+    def parse_atom_labels(self, lines):
+        """
+        Parses a simple frame into a
+        3N array of which atomic is in which
+        position.
+        :param lines:
+        :return:
+        """
+        seen_atoms = defaultdict(lambda: 0)
+        atom_labels = []
         for line in lines:
-            elements = lines[0].split()
-            del elements[0]
-            elements = np.asfarray(elements,float)
-            frame.extend(elements)
+            atom = line.split()[0]
+            seen_atoms[atom] += 1
+            atom = f"{atom}{seen_atoms[atom]}"
+            atom_labels.extend([f"{atom}_x", f"{atom}_y", f"{atom}_z"])
+        return atom_labels
 
-        return frame
+    def parse_one_frame(self, lines):
         """
         Parses a simple frame into
         a 3xN vector.
@@ -56,6 +67,13 @@ class XYZFile:
         :param lines:
         :return:
         """
+        frame = []
+        for line in lines:
+            elements = line.split()[1:]
+            elements = np.asfarray(elements,float)
+            frame.extend(elements)
+        return np.array(frame)
+
 
     def parse_xyz_file(self, filename):
         """
@@ -78,7 +96,8 @@ class XYZFile:
             # point number.
             assert self.num_frames == len(lines) / (self.num_atoms + xyz_header_lines)
 
-            frames = []
+            frames = np.empty([self.num_frames, self.num_atoms * 3])
+            self.atom_labels = self.parse_atom_labels(lines[xyz_header_lines: xyz_header_lines+self.num_atoms])
             for i in range(self.num_frames):
                 start_index = i * (self.num_atoms + xyz_header_lines) + xyz_header_lines
                 end_index = (i + 1) * (self.num_atoms + xyz_header_lines)
@@ -92,7 +111,7 @@ class XYZFile:
 
                 frame_lines = lines[start_index: end_index]
                 frame = self.parse_one_frame(frame_lines)
-                frames.append(frame)
+                frames[i, :] = frame
                 assert len(frame_lines) == self.num_atoms
 
         return frames
@@ -100,4 +119,3 @@ class XYZFile:
 
 if __name__ == "__main__":
     input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
-    print(input_file)
