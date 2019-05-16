@@ -10,11 +10,13 @@ numpy array.
 import numpy as np
 from collections import defaultdict
 
-def cast_positive_int(in_string):
+
+def cast_positive_int(in_string: str) -> int:
     """
     Checks that a string is a valid
     positive integer
     :param in_string:
+    :type in_string: object
     :return:
     """
     try:
@@ -49,7 +51,7 @@ class XYZFile:
     def __str__(self):
         return f"{self.filename}, with {self.num_atoms} atoms in {self.num_frames} frames"
 
-    def parse_atom_labels(self, lines):
+    def parse_atom_labels(self, lines: list) -> list:
         """
         Parses a simple frame into a
         3N array of which atomic is in which
@@ -67,11 +69,11 @@ class XYZFile:
         assert len(atom_labels) == self.num_atoms * 3, "Did not find 3N atomic labels."
         return atom_labels
 
-    def parse_one_frame(self, lines):
+    @staticmethod
+    def parse_one_frame(lines: list):
         """
         Parses a simple frame into
         a 3xN vector.
-        :param: num_atoms
         :param lines:
         :return:
         """
@@ -82,8 +84,7 @@ class XYZFile:
             frame.extend(elements)
         return np.array(frame)
 
-
-    def parse_xyz_file(self, filename):
+    def parse_xyz_file(self, filename: str):
         """
         Loads in an .xyz file into
         a set of 3N atom coordinates x M steps.
