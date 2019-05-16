@@ -39,9 +39,13 @@ class XYZFile():
                 return
             xyz_header_lines = 2
             self.num_frames = int(len(lines) / (self.num_of_atoms + xyz_header_lines))
-            for i in range(len(self.num_frames)):
-                start_index = 2 + (i * )
-                frame_lines = lines[xyz_header]
+            for i in range(self.num_frames):
+                start_index = i * (self.num_of_atoms + xyz_header_lines) + xyz_header_lines
+                end_index = (i + 1) * (self.num_of_atoms + xyz_header_lines)
+                print(start_index, end_index)
+                frame_lines = lines[start_index : end_index]
+                self.parse_one_frame(frame_lines)
+                print(len(frame_lines))
 
 
 
