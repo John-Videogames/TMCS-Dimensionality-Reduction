@@ -13,7 +13,7 @@ import periodictable
 import rmsd
 
 
-def cast_positive_int(in_string: str) -> int:
+def cast_positive_int(in_string) -> int:
     """
     Checks that a string is a valid
     positive integer
@@ -91,7 +91,6 @@ class XYZFile:
         Parses a simple frame into a
         3N array of which atom is in which
         position.
-        :param lines:
         :return:
         """
         seen_atoms = defaultdict(lambda: 0)
@@ -139,6 +138,7 @@ class XYZFile:
         Loads in an .xyz file into
         a set of 3N atom coordinates x M steps.
         :param filename:
+        :param translate:
         :return:
         """
 
