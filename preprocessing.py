@@ -1,5 +1,3 @@
-def testFunction():
-    return 1
 
 
 def parse_xyz_file(filename: string):
