@@ -1,6 +1,6 @@
 
 import os
-
+import numpy as np
 
 class XYZFile():
     """
@@ -12,6 +12,9 @@ class XYZFile():
         self.num_atoms = 0 # Set this in "parse_xyz_file"
         self.num_frames = 0
         self.frames = self.parse_xyz_file(filename)
+
+    def __str__(self):
+        return f"{self.filename}, with {self.num_atoms} atoms in {self.num_frames} frames"
 
     def parse_one_frame(self, lines):
         """
@@ -33,22 +36,23 @@ class XYZFile():
         with open(filename, "r") as infile:
             lines = infile.readlines()
             try:
-                self.num_of_atoms = int(lines[0])
+                self.num_atoms = int(lines[0])
             except ValueError:
                 print("Bad number of atoms.")
                 return
             xyz_header_lines = 2
-            self.num_frames = int(len(lines) / (self.num_of_atoms + xyz_header_lines))
+            self.num_frames = int(len(lines) / (self.num_atoms + xyz_header_lines))
+            frames = np.empty([self.num_atoms * 3, self.num_frames])
+            print(frames.shape)
             for i in range(self.num_frames):
-                start_index = i * (self.num_of_atoms + xyz_header_lines) + xyz_header_lines
-                end_index = (i + 1) * (self.num_of_atoms + xyz_header_lines)
-                print(start_index, end_index)
+                start_index = i * (self.num_atoms + xyz_header_lines) + xyz_header_lines
+                end_index = (i + 1) * (self.num_atoms + xyz_header_lines)
                 frame_lines = lines[start_index : end_index]
-                self.parse_one_frame(frame_lines)
-                print(len(frame_lines))
+                frame = self.parse_one_frame(frame_lines)
+                assert len(frame_lines) == self.num_atoms
 
 
 
 if __name__ == "__main__":
     input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
-    print(input_file.num_atoms, input_file.num_frames)
+    print(input_file)
