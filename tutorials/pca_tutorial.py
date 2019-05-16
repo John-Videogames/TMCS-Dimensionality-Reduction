@@ -37,7 +37,7 @@ def tutorial_1():
     """Tutorial 1: Random 2D dataset rotated to PCA 2D"""
 
     #Set up the PCA and fit
-    pca = PCA(n_components=2)
+    pca = PCA()
     pca.fit(X)
 
     #Data from fit
@@ -142,7 +142,7 @@ def tutorial_6():
     pca.fit(faces.data)
     
     
-
+tutorial_1()
     
 
 

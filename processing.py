@@ -21,6 +21,13 @@ class PCAResults:
     def get_comp_variance(self):
         """Return variance for each PCA component"""
         return self.pca.explained_variance_ratio_
+    
+    def get_nth_eigenvector(self, number):
+        """Retrun eigenvector number"""
+        return self.pca.components_[number-1]
+    
+    def get_all_eigenvectors(self):
+        return self.pca.components_
         
 if __name__ == "__main__":
     
@@ -31,3 +38,7 @@ if __name__ == "__main__":
     PCA_test = PCAResults(input_file) 
     #obtain variance for all PCA components as array
     variances = PCA_test.get_comp_variance()
+    #obtain nth eigenvector as array
+    eigenvector_1 = PCA_test.get_nth_eigenvector(1)
+    #obtain all eigenvectors as matrix
+    eigenvector_matrix = PCA_test.get_all_eigenvectors()
