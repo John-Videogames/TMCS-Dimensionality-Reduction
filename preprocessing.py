@@ -1,4 +1,31 @@
+
 import numpy as np
+
+def cast_num_atoms(num_atoms):
+    """
+    Validates a string number of atoms
+    to make sure it is a valid, positive
+    integer, and then returns it.
+    :param num_atoms:
+    :return:
+    """
+    try:
+        int(num_atoms)
+    except ValueError:
+        raise ValueError(f"Cannot turn {num_atoms} into an integer")
+    if int(num_atoms) != float(num_atoms):
+        raise ValueError(f"{num_atoms} is floating point number, not an int")
+
+    num_atoms = int(num_atoms)
+    if num_atoms == 0:
+        raise ValueError(f"num_atoms cannot be zero.")
+
+    if num_atoms < 0:
+        raise ValueError(f"num_atoms cannot be negative.")
+
+    return num_atoms
+
+
 class XYZFile:
     """
     Class for an xyz file that
@@ -33,7 +60,7 @@ class XYZFile:
     def parse_xyz_file(self, filename):
         """
         Loads in an .xyz file into
-        a set of 3N x steps vectors
+           a set of 3N x steps vectors
         :param filename:
         :return:
         """
@@ -42,14 +69,7 @@ class XYZFile:
 
         with open(filename, "r") as infile:
             lines = infile.readlines()
-            print(lines[3])
-            try:
-                self.num_atoms = int(lines[0])
-            except ValueError:
-                raise ValueError('Cannot convert num_atoms in line 0 to an integer')
-
-            assert self.num_atoms != 0, "num_atoms in line 0 cannot be 0."
-            assert self.num_atoms > 0, "num_atoms in line 0 cannot be negative."
+            self.num_atoms = cast_num_atoms(lines[0])
 
             xyz_header_lines = 2
 
@@ -64,7 +84,7 @@ class XYZFile:
                 end_index = (i + 1) * (self.num_atoms + xyz_header_lines)
 
                 frame_num_atoms_index = start_index - 2
-                frame_num_atoms = int(lines[frame_num_atoms_index])
+                frame_num_atoms = cast_num_atoms(lines[frame_num_atoms_index])
                 assert frame_num_atoms == self.num_atoms, f"""
                                                            num_atoms at line {frame_num_atoms_index }inconsistent.
                                                            Got {frame_num_atoms}, expected {self.num_atoms}.
