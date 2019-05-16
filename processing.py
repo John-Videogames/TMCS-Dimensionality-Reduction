@@ -27,10 +27,14 @@ class PCAResults:
         return self.pca.components_[number-1]
     
     def get_all_eigenvectors(self):
+        """Return all eigenvectors"""
         return self.pca.components_
+    
+    
         
 if __name__ == "__main__":
     
+    #From preprocessing: create input_file
     input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
     
     #Example how to use the PCAResults class
