@@ -193,12 +193,6 @@ class XYZFile:
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
+
     input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
     input_file.writeOutXYYZ("./Resources/malonaldehyde_IRC_Shifted.xyz")
-=======
-    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz", translate=True)
-    print(input_file.atom_masses)
-    print(input_file.atom_labels)
-    print(input_file.atom_types)
->>>>>>> 3c095cdf06cf76d152dda0f6c44fff1c3b24a386
