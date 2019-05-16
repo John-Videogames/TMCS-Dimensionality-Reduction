@@ -188,7 +188,7 @@ class XYZFile:
                     x = frame[3 * index]
                     y = frame[3 * index + 1]
                     z = frame[3 * index + 2]
-                    out_file.write(f"{label}\t{x}\t{y}\t{z}")
+                    out_file.write(f"{label}\t{x}\t{y}\t{z}\n")
 
 
 if __name__ == "__main__":
