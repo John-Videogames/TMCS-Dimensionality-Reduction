@@ -96,9 +96,10 @@ class XYZFile:
         seen_atoms = defaultdict(lambda: 0)
         atom_labels = []
         for atom in self.atom_types:
-            atom = f"{atom}{seen_atoms[atom]}"
-            atom_labels.extend([f"{atom}_x", f"{atom}_y", f"{atom}_z"])
+            atom_count = seen_atoms[atom]
             seen_atoms[atom] += 1
+            atom = f"{atom}{atom_count}"
+            atom_labels.extend([f"{atom}_x", f"{atom}_y", f"{atom}_z"])
         assert len(atom_labels) == self.num_atoms * 3, "Did not find 3N atomic labels."
         return atom_labels
 
@@ -183,17 +184,19 @@ class XYZFile:
                 out_file.write(str(self.num_atoms)+'\n')
                 out_file.write('Shifted XYZ\n')
                 for index in range(len(frame)//3):
-                    label = self.atom_labels[index]
+                    label = self.atom_types[index]
                     x = frame[3 * index]
                     y = frame[3 * index + 1]
                     z = frame[3 * index + 2]
-                    out_file.write(f"{label}\t{x}\t{y}\t{z}")
+                    out_file.write(f"{label}\t{x}\t{y}\t{z}\n")
 
 
 if __name__ == "__main__":
-    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz", translate=True)
-    input_file.write_out("./Resources/malonaldehyde_IRC_Shifted.xyz")
+    input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz", translate=True)
     print(input_file.atom_masses)
     print(input_file.atom_labels)
     print(input_file.atom_types)
+
+    print(input_file.num_atoms)
+    print(input_file.frames[0])
 
