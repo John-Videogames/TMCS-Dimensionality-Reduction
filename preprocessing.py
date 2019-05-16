@@ -48,6 +48,7 @@ class XYZFile:
         self.num_atoms = 0  # Set this in "parse_xyz_file"
         self.num_frames = 0
         self.atom_types = None
+        self.energy_frames = []
         self.frames = self.parse_xyz_file(filename, translate)
         self.minimise_rmsd()
 
@@ -114,6 +115,17 @@ class XYZFile:
         assert len(atom_types) == self.num_atoms, f"Did not find {self.num_atoms} atomic types."
         return atom_types
 
+    def appendEnergy(self,line):
+        """
+                Appends to energy_frames  the energy of each frame
+                :param lines:
+                :param
+                :return:
+                """
+        self.energy_frames.append(float(line.split()[8]))
+
+
+
     @staticmethod
     def parse_one_frame(lines: list, translate):
         """
@@ -169,6 +181,7 @@ class XYZFile:
                 frame = self.parse_one_frame(frame_lines, translate)
                 frames[i, :] = frame
                 assert len(frame_lines) == self.num_atoms
+                self.appendEnergy(lines[i * (self.num_atoms + xyz_header_lines) + 1])
 
         return frames
 
@@ -198,5 +211,6 @@ if __name__ == "__main__":
     print(input_file.atom_types)
 
     print(input_file.num_atoms)
+    print(input_file.energy_frames)
     print(input_file.frames[0])
 
