@@ -43,7 +43,7 @@ class XYZFile:
     Class for an xyz file that
     creates a trajectory.
     """
-    def __init__(self, filename, translate=False):
+    def __init__(self, filename, translate=True):
         self.filename = filename
         self.num_atoms = 0  # Set this in "parse_xyz_file"
         self.num_frames = 0
