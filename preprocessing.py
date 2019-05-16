@@ -17,6 +17,17 @@ class XYZFile():
         return f"{self.filename}, with {self.num_atoms} atoms in {self.num_frames} frames"
 
     def parse_one_frame(self, lines):
+        frame = np.array([3 * len(lines)])
+        #for line in lines:
+        elements = lines[0].split()
+        del elements[0]
+        elements=np.array(elements)
+        elements = np.array(elements)
+        elements.astype(np.float)
+        x=elements[0]+elements[1]
+        #print(x)
+
+        print(elements)
         """
         Parses a simple frame into
         a 3xN vector.
@@ -35,6 +46,7 @@ class XYZFile():
 
         with open(filename, "r") as infile:
             lines = infile.readlines()
+            print(lines[3])
             try:
                 self.num_atoms = int(lines[0])
             except ValueError:
