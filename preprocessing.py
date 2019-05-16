@@ -13,7 +13,7 @@ import periodictable
 import rmsd
 
 
-def cast_positive_int(in_string: str) -> int:
+def cast_positive_int(in_string) -> int:
     """
     Checks that a string is a valid
     positive integer
@@ -91,7 +91,6 @@ class XYZFile:
         Parses a simple frame into a
         3N array of which atom is in which
         position.
-        :param lines:
         :return:
         """
         seen_atoms = defaultdict(lambda: 0)
@@ -140,6 +139,7 @@ class XYZFile:
         Loads in an .xyz file into
         a set of 3N atom coordinates x M steps.
         :param filename:
+        :param translate:
         :return:
         """
 
@@ -171,28 +171,29 @@ class XYZFile:
 
         return frames
 
-    def writeOutXYYZ(self, fileName):
-        #print(self.frames)
-
-
-        fileOut = open(fileName,'w+')
-
-        for frame in self.frames:
-
-            fileOut.write(str(self.num_atoms)+'\n')
-            fileOut.write('Shifted XYZ'+'\n')
-
-            for index in range(len(frame)//3):
-                x = frame[3 * index]
-                y = frame[3 * index + 1]
-                z = frame[3 * index + 2]
-                fileOut.write(str(self.atom_labels[index])+'\t'+str(x)+'\t'+str(y)+'\t'+str(z)+'\n')
-
-
-
+    def write_out(self, file_name):
+        """
+        Writes out the contents of this
+        to a new xyz file
+        :param file_name:
+        :return:
+        """
+        with open(file_name,'w') as out_file:
+            for frame in self.frames:
+                out_file.write(str(self.num_atoms)+'\n')
+                out_file.write('Shifted XYZ\n')
+                for index in range(len(frame)//3):
+                    label = self.atom_labels[index]
+                    x = frame[3 * index]
+                    y = frame[3 * index + 1]
+                    z = frame[3 * index + 2]
+                    out_file.write(f"{label}\t{x}\t{y}\t{z}")
 
 
 if __name__ == "__main__":
+    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz", translate=True)
+    input_file.write_out("./Resources/malonaldehyde_IRC_Shifted.xyz")
+    print(input_file.atom_masses)
+    print(input_file.atom_labels)
+    print(input_file.atom_types)
 
-    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
-    input_file.writeOutXYYZ("./Resources/malonaldehyde_IRC_Shifted.xyz")
