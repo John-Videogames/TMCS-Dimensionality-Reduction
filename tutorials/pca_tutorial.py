@@ -142,8 +142,7 @@ def tutorial_6():
     pca.fit(faces.data)
     
     
-    
-tutorial_6()
+
     
 
 
