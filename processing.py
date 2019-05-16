@@ -25,6 +25,7 @@ class PCAResults:
             # Doing PCA with n_components components
             self.pca = PCA(n_components).fit(self.data)
         self.transformed_data = None
+        self.inversetransformed_data = None
         
     def get_comp_variance(self):
         """Return variance for each PCA component"""
@@ -40,11 +41,29 @@ class PCAResults:
 
     def transform_data(self):
         """Transform data based on fit"""
-        self.transformed_data = self.pca.transform(self.data).T
+        self.transformed_data = self.pca.transform(self.data)
 
     def get_transformed_data(self):
         """Return matrix of transformed data"""
-        return self.transformed_data
+        if self.transformed_data is None:
+            print("Data has not be transformed yet. Transformation will be done automatically now")
+            self.transform_data()
+        return self.transformed_data.T
+
+    def inversetransform_data(self):
+        """Inverse transform data"""
+        if self.transformed_data is None:
+            print("Data has not be transformed yet. Transformation will be done automatically now")
+            self.transform_data()
+        self.inversetransformed_data = self.pca.inverse_transform(self.transformed_data)
+
+    def get_inversetransform_data(self):
+        """Return inverse transform data"""
+        if self.inversetransformed_data is None:
+            print("Data has not been inverse transformed yet. Inverse transformation will be done automatically now")
+            self.inversetransform_data()
+        return self.inversetransformed_data
+
 
 
 if __name__ == "__main__":
@@ -71,9 +90,17 @@ if __name__ == "__main__":
     PCA_test_2 = PCAResults(input_file, 2)
     # Transform data based on PCA fit
     PCA_test_2.transform_data()
+
     # Example for plotting the transformed data in the coordinate system spanned by PC1 and PC2
     plt.scatter(PCA_test_2.get_transformed_data()[0], PCA_test_2.get_transformed_data()[1])
     plt.show()
+
+    # Inverse transform data
+    PCA_test_2.inversetransform_data()
+
+    # Write inverse tranformed data as xyz - visualize in VMD
+    input_file.frames = PCA_test_2.get_inversetransform_data()
+    input_file.write_out("PCA_out_test.xyz")
 
 
 
