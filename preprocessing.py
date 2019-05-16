@@ -131,6 +131,7 @@ class XYZFile:
         frame = np.array(frame).reshape(-1, 3)
         if translate:
             frame -= rmsd.centroid(frame)
+
         return frame.ravel()
 
     def parse_xyz_file(self, filename: str, translate: bool):
@@ -170,9 +171,34 @@ class XYZFile:
 
         return frames
 
+    def writeOutXYYZ(self, fileName):
+        #print(self.frames)
+
+
+        fileOut = open(fileName,'w+')
+
+        for frame in self.frames:
+
+            fileOut.write(str(self.num_atoms)+'\n')
+            fileOut.write('Shifted XYZ'+'\n')
+
+            for index in range(len(frame)//3):
+                x = frame[3 * index]
+                y = frame[3 * index + 1]
+                z = frame[3 * index + 2]
+                fileOut.write(str(self.atom_labels[index])+'\t'+str(x)+'\t'+str(y)+'\t'+str(z)+'\n')
+
+
+
+
 
 if __name__ == "__main__":
+<<<<<<< HEAD
+    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
+    input_file.writeOutXYYZ("./Resources/malonaldehyde_IRC_Shifted.xyz")
+=======
     input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz", translate=True)
     print(input_file.atom_masses)
     print(input_file.atom_labels)
     print(input_file.atom_types)
+>>>>>>> 3c095cdf06cf76d152dda0f6c44fff1c3b24a386
