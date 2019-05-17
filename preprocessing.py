@@ -72,8 +72,11 @@ class XYZFile:
             raise ValueError("Bad rotation method provided.")
 
         first_frame = self.frames[0, :].reshape(-1, 3)
+        first_frame -= rmsd.centroid(first_frame)
         for i, other_frame in enumerate(self.frames[1:, :], 1):
             other_frame = other_frame.reshape(-1, 3)
+            centroid = rmsd.centroid(other_frame)
+            other_frame -= centroid
             other_frame = rotation_func(other_frame, first_frame).ravel()
             self.frames[i, :] = other_frame
 

@@ -83,6 +83,7 @@ def get_xyz_for_specific_pc(XYZ_object, components):
 
     for i in components:
         input_file.frames = PCA_object.get_specific_inversetransformed_component(i)
+        input_file.minimise_rmsd()
         input_file.write_out(XYZ_object.filename[:-4] + "_comp" + str(i) + ".xyz")
 
 def plot_projections(possible_files, average_over_all=False):
@@ -104,8 +105,14 @@ def plot_projections(possible_files, average_over_all=False):
     for xyz_file in xyz_files[1:]:
         transformed_data = master_pca.transform_data(xyz_file.frames)
         ax.plot(transformed_data[:, 0], transformed_data[:, 1])
-    plt.show()
 
+    plt.xlabel("PCA 1")
+    plt.ylabel("PCA 2")
+    plt.title("Motion in a common PCA space")
+    if average_over_all:
+        plt.savefig("./Outputs/projected-pca-averaged-projection.pdf")
+    else:
+        plt.savefig("./Outputs/projected-pca.pdf")
 
 if __name__ == "__main__":
     #input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
@@ -118,16 +125,27 @@ if __name__ == "__main__":
     plot_projections(POSSIBLE_FILES)
     plot_projections(POSSIBLE_FILES, True)
     input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
+    pca_result = PCAResults(input_file)
+    comp = [i for i in range(pca_result.num_important_components(0.75))]
+    get_xyz_for_specific_pc(input_file, comp)
+    # Test for energy_bar_pca_plot() function
+    # input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
+    # energy_bar_pca_plot(input_file,1,2,3)
 
     for inputXYZ in POSSIBLE_FILES:
         pca_result = pca_from_xyz(inputXYZ)
         meaningful_components = pca_result.num_important_components(0.9)
+        print(meaningful_components)
         get_xyz_for_specific_pc(XYZFile(inputXYZ),range(meaningful_components))
 
     #Test for energy_bar_pca_plot() function
     #input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
     #energy_bar_pca_plot(input_file,1,2)
 
+    # Test for get_xyz_for_specific_pc() function
+    # input_file = XYZFile('./Resources/malonaldehyde_IRC.xyz')
+    # comp = [1,2]
+    # get_xyz_for_specific_pc(input_file,comp)
     #Test for get_xyz_for_specific_pc() function
     #input_file = XYZFile('./Resources/malonaldehyde_IRC.xyz')
     #comp = [1,2]
