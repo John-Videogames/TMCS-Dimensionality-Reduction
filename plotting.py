@@ -108,6 +108,10 @@ def plot_projections(possible_files, average_over_all=False):
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
+    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
+    PCA_test = PCAResults(input_file) 
+=======
     #input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
     #pca_result = pca_from_xyz("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
 
@@ -143,6 +147,7 @@ if __name__ == "__main__":
     #input_file = XYZFile('./Resources/malonaldehyde_IRC.xyz')
     #comp = [1,2]
     #get_xyz_for_specific_pc(input_file,comp)
+>>>>>>> 0946256f4a6a7e3a263e1c59ae6eb061c158ad2c
 
     for i in POSSIBLE_FILES:
         input_file = XYZFile(i)
