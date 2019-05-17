@@ -153,4 +153,4 @@ if __name__ == "__main__":
 
     for i in POSSIBLE_FILES:
         input_file = XYZFile(i)
-        energy_bar_pca_plot(input_file,1,2,3)
+        energy_bar_pca_plot(input_file,1,2)
