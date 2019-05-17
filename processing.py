@@ -44,6 +44,8 @@ class PCAResults:
         """Transform data based on fit"""
         self.transformed_data = self.pca.transform(self.data)
 
+
+
     def get_transformed_data(self):
         """Return matrix of transformed data"""
         if self.transformed_data is None:

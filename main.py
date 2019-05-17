@@ -21,6 +21,7 @@ if __name__ == "__main__":
 
     for file in POSSIBLE_FILES:
         input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
+        print(input_file.energy_frames)
         PCA_test = PCAResults(input_file)
         print(PCA_test.num_important_components(0.90), "components are necessary to capture 90% of the variance")
     PCA_test.inversetransform_data()
