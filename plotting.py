@@ -11,5 +11,6 @@ from processing import *
 from sklearn.decomposition import PCA
 
 if __name__ == "__main__":
-    pass
+    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
+    PCA_test = PCAResults(input_file) 
 
