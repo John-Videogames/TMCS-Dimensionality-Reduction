@@ -47,7 +47,25 @@ def energy_bar_pca_plot(XYZ_object, comp1, comp2, comp3 = None):
         ax.plot(transformed_data[comp1 - 1], transformed_data[comp2 - 1],transformed_data[comp3 - 1] )
     plt.show()
 
+def get_xyz_for_specific_pc(XYZ_object, components):
+    """
+    performs PCA and gives xyz files of specific components
+    :param XYZ_object:
+    :return:
+    """
+    PCA_object = PCAResults(XYZ_object)
+    PCA_object.transform_data()
+
+    for i in components:
+        input_file.frames = PCA_object.get_specific_inversetransformed_component(i)
+        input_file.write_out(XYZ_object.filename[:-4] + "_comp" + str(i) + ".xyz")
 
 if __name__ == "__main__":
-    input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
-    energy_pca_2D(input_file,1,2,3)
+    #Test for energy_bar_pca_plot() function
+    #input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
+    #energy_bar_pca_plot(input_file,1,2,3)
+
+    #Test for get_xyz_for_specific_pc() function
+    #input_file = XYZFile('./Resources/malonaldehyde_IRC.xyz')
+    #comp = [1,2]
+    #get_xyz_for_specific_pc(input_file,comp)
