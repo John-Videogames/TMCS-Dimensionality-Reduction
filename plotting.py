@@ -67,7 +67,7 @@ def energy_bar_pca_plot(XYZ_object, comp1, comp2, comp3 = None):
         ax.legend()
         ax.set_title(i[12:-4] +"\nPC spanning a variance of %.3f" % (np.sum(PCA_object.get_comp_variance()[:3])))
 
-    plt.savefig("output/" + i[12:-4] + ".pdf")
+    plt.savefig("Outputs/" + i[12:-4] + "2D.pdf")
     #plt.show()
     plt.close()
 
