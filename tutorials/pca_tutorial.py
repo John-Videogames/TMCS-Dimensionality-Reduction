@@ -102,6 +102,7 @@ def tutorial_3():
     plt.xlabel('component 1')
     plt.ylabel('component 2')
     plt.colorbar();
+    plt.show()
     
     
 def tutorial_4():
@@ -142,7 +143,7 @@ def tutorial_6():
     pca.fit(faces.data)
     
     
-tutorial_1()
+tutorial_3()
     
 
 
