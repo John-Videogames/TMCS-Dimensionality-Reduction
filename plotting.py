@@ -83,6 +83,7 @@ def get_xyz_for_specific_pc(XYZ_object, components):
 
     for i in components:
         input_file.frames = PCA_object.get_specific_inversetransformed_component(i)
+        input_file.minimise_rmsd()
         input_file.write_out(XYZ_object.filename[:-4] + "_comp" + str(i) + ".xyz")
 
 def plot_projections(possible_files, average_over_all=False):
@@ -104,14 +105,16 @@ def plot_projections(possible_files, average_over_all=False):
     for xyz_file in xyz_files[1:]:
         transformed_data = master_pca.transform_data(xyz_file.frames)
         ax.plot(transformed_data[:, 0], transformed_data[:, 1])
-    plt.show()
 
+    plt.xlabel("PCA 1")
+    plt.ylabel("PCA 2")
+    plt.title("Motion in a common PCA space")
+    if average_over_all:
+        plt.savefig("./Outputs/projected-pca-averaged-projection.pdf")
+    else:
+        plt.savefig("./Outputs/projected-pca.pdf")
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    input_file = XYZFile("./Resources/malonaldehyde_IRC.xyz")
-    PCA_test = PCAResults(input_file) 
-=======
     #input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
     #pca_result = pca_from_xyz("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
 
@@ -147,7 +150,6 @@ if __name__ == "__main__":
     #input_file = XYZFile('./Resources/malonaldehyde_IRC.xyz')
     #comp = [1,2]
     #get_xyz_for_specific_pc(input_file,comp)
->>>>>>> 0946256f4a6a7e3a263e1c59ae6eb061c158ad2c
 
     for i in POSSIBLE_FILES:
         input_file = XYZFile(i)

@@ -80,6 +80,7 @@ class PCAResults:
         :return:
         """
         assert threshold <= 1.0 and threshold >= 0.0, "Threshold must be in the range (0.0, 1.0)"
+        print(np.cumsum(self.pca.explained_variance_ratio_))
         return np.argmax(np.cumsum(self.pca.explained_variance_ratio_) > threshold)
 
     def get_specific_inversetransformed_component(self, component):
