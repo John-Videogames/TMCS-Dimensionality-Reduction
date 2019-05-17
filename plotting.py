@@ -114,6 +114,7 @@ def plot_projections(possible_files, average_over_all=False):
     else:
         plt.savefig("./Outputs/projected-pca.pdf")
 
+
 if __name__ == "__main__":
     #input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
     #pca_result = pca_from_xyz("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
