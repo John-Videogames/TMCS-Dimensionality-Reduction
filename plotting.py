@@ -99,6 +99,13 @@ if __name__ == "__main__":
     plot_projections(POSSIBLE_FILES)
     plot_projections(POSSIBLE_FILES, True)
     input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
+
+    for inputXYZ in POSSIBLE_FILES:
+        pca_result = pca_from_xyz(inputXYZ)
+        meaningful_components = pca_result.num_important_components(0.9)
+        get_xyz_for_specific_pc(XYZFile(inputXYZ),range(meaningful_components))
+
+
     #Test for energy_bar_pca_plot() function
     #input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
     #energy_bar_pca_plot(input_file,1,2,3)
