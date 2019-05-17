@@ -118,11 +118,11 @@ class XYZFile:
 
     def appendEnergy(self, line):
         """
-                Appends to energy_frames  the energy of each frame
-                :param lines:
-                :param
-                :return:
-                """
+        Appends to energy_frames  the energy of each frame
+        :param lines:
+        :param
+        :return:
+        """
         try:
             self.energy_frames.append(float(line.split()[8]))
         except AttributeError:
@@ -158,7 +158,7 @@ class XYZFile:
         :return:
         """
 
-        assert filename.endswith(".xyz"), "File must be in .xyz format."
+        assert filename.endswith(".xyz"), f"File must be in .xyz format, but is {filename}"
         xyz_header_lines = 2
         with open(filename, "r") as infile:
             lines = infile.readlines()
@@ -190,13 +190,15 @@ class XYZFile:
 
         return frames
 
-    def write_out(self, file_name):
+    def write_out(self, file_name: str):
         """
         Writes out the contents of this
-        to a new xyz file
+        to a new xyz file to a file
+        name given in a string.
         :param file_name:
         :return:
         """
+        assert file_name.endswith(".xyz"), f"File name must end with .xyz, but it is {file_name}"
         with open(file_name, 'w') as out_file:
             for frame in self.frames:
                 out_file.write(str(self.num_atoms)+'\n')
@@ -208,11 +210,29 @@ class XYZFile:
                     z = frame[3 * index + 2]
                     out_file.write(f"{label}\t{x}\t{y}\t{z}\n")
 
+    def append(self, other_xyz):
+        """
+        Adds another xyz file into this
+        one, updating the number of frames
+        as it goes. Will also make sure the
+        frames are all aligned and rotated to
+        minimise rmsd.
+        TODO: The rmsd step is N^2 because it repeatedly loops.
+        TODO: fix that so it doesn't repeatedly minimise.
+        :param other_xyz:
+        :return:
+        """
+        assert self.num_atoms == other_xyz.num_atoms, "Number of atoms must be the same"
+        self.frames = np.concatenate([self.frames, other_xyz.frames])
+        self.num_frames += other_xyz.num_frames
+        self.minimise_rmsd()
 
 if __name__ == "__main__":
     input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz",
                          translate=True)
-    input_file = XYZFile("")
+    input_file_2 = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz",
+                         translate=True)
+    input_file.append(input_file_2)
     #print(input_file.atom_masses)
     # print(input_file.atom_labels)
     #print(input_file.atom_types)

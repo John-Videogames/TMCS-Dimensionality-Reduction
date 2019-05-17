@@ -10,6 +10,16 @@ from preprocessing import *
 from processing import *
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
+
+
+POSSIBLE_FILES = ['./Resources/trajectory_2019-05-16_03-49-27-PM.xyz',
+                  './Resources/trajectory_2019-05-16_03-44-22-PM.xyz',
+                  './Resources/trajectory_2019-05-16_03-43-00-PM.xyz',
+                  './Resources/trajectory_2019-05-16_03-03-39-PM.xyz',
+                  './Resources/trajectory_2019-05-16_03-48-20-PM.xyz',
+                  './Resources/trajectory_2019-05-16_03-48-54-PM.xyz',
+                  './Resources/trajectory_2019-05-16_03-04-45-PM.xyz']
+
 from mpl_toolkits.mplot3d import Axes3D
 
 
@@ -63,7 +73,35 @@ def get_xyz_for_specific_pc(XYZ_object, components):
         input_file.frames = PCA_object.get_specific_inversetransformed_component(i)
         input_file.write_out(XYZ_object.filename[:-4] + "_comp" + str(i) + ".xyz")
 
+def plot_projections(possible_files, average_over_all=False):
+    xyz_files = [XYZFile(filename) for filename in possible_files]
+    # If we average over all, we create one 'master' xyz
+    # file that contains all of them (rotated and scaled to
+    # be at the same centre as xyz_files[0])
+    if average_over_all:
+        master_xyz = xyz_files[0]
+        for xyz_file in xyz_files[1:]:
+            master_xyz.append(xyz_file)
+    else:
+        # Otherwise, just use the first one.
+        master_xyz = xyz_files[0]
+    master_pca = PCAResults(master_xyz, 2)
+    print(len(possible_files))
+    fig, ax = plt.subplots()
+    # ax.plot(master_pca.transformed_data[:, 0], master_pca.transformed_data[:, 1], "black")
+    for xyz_file in xyz_files[1:]:
+        transformed_data = master_pca.transform_data(xyz_file.frames)
+        ax.plot(transformed_data[:, 0], transformed_data[:, 1])
+    plt.show()
+
+
 if __name__ == "__main__":
+    input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
+    pca_result = pca_from_xyz("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
+
+    plot_projections(POSSIBLE_FILES)
+    plot_projections(POSSIBLE_FILES, True)
+    input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
     #Test for energy_bar_pca_plot() function
     #input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
     #energy_bar_pca_plot(input_file,1,2)

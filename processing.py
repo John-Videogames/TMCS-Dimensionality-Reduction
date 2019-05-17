@@ -25,7 +25,7 @@ class PCAResults:
         else:
             # Doing PCA with n_components components
             self.pca = PCA(n_components).fit(self.data)
-        self.transformed_data = None
+        self.transformed_data = self.transform_data()
         self.inversetransformed_data = None
         
     def get_comp_variance(self):
@@ -40,10 +40,14 @@ class PCAResults:
         """Return all eigenvectors"""
         return self.pca.components_
 
-    def transform_data(self):
-        """Transform data based on fit"""
-        self.transformed_data = self.pca.transform(self.data)
-
+    def transform_data(self, data=None):
+        """
+        Transform data based on fit.
+        By default transforms its own data.
+        """
+        if data is None:
+            data = self.data
+        return self.pca.transform(data)
 
 
     def get_transformed_data(self):
