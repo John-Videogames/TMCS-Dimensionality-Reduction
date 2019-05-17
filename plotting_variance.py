@@ -8,6 +8,7 @@ from preprocessing import *
 from processing import *
 from sklearn.decomposition import PCA
 from main import *
+from matplotlib.pyplot import cm
 
 
 def cumulative_variance():
@@ -50,35 +51,22 @@ def cumulative_variance():
 
     # ---------------------------- plotting ------------------------------- #
 
-    print(component, all_cumulative_variances)
-    print(len(all_cumulative_variances[0]))
-
     fig = plt.figure(figsize = (5,5))
     ax = fig.add_subplot(111)
-
     xmin, xmax = -1,25
     ymin, ymax = 0,1.1
 
-    #plt.xlabel('Number of components')
-    #plt.ylabel('Cumulative variance')
-    #plt.title("A test graph")
-
-    # ax.scatter(component, all_cumulative_variances[0], label='trajectory %s' % i, c='r')
-
-
     for k in range(len(all_cumulative_variances)):
-       ax.plot(component,all_cumulative_variances[i],label = 'trajectory %s'%k, c = 'r' )
+       ax.plot(component,all_cumulative_variances[k],label = 'trajectory %s'%int(k+1), marker = '+')
 
-    plt.legend()
+    plt.legend(loc='best')
     ax.set_xlabel('Number of components')
     ax.set_ylabel('Cumulative variance')
-    ax.set_title("A test graph")
+    ax.set_title("Cumulative variances of the trajectories")
     ax.set_xlim(xmin, xmax)
     ax.set_ylim(ymin, ymax)
     fig.show()
     fig.savefig('cumulative_variances.png')
-
-
 
 
 if __name__ == "__main__":
