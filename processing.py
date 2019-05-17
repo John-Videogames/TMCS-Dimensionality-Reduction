@@ -33,7 +33,7 @@ class PCAResults:
         return self.pca.explained_variance_ratio_
     
     def get_nth_eigenvector(self, number):
-        """Retrun eigenvector number"""
+        """Return eigenvector number"""
         return self.pca.components_[number-1]
     
     def get_all_eigenvectors(self):
