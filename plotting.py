@@ -99,11 +99,14 @@ if __name__ == "__main__":
     plot_projections(POSSIBLE_FILES)
     plot_projections(POSSIBLE_FILES, True)
     input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
-    #Test for energy_bar_pca_plot() function
-    #input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
-    #energy_bar_pca_plot(input_file,1,2,3)
+    pca_result = PCAResults(input_file)
+    comp = [i for i in range(pca_result.num_important_components(0.75))]
+    get_xyz_for_specific_pc(input_file, comp)
+    # Test for energy_bar_pca_plot() function
+    # input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
+    # energy_bar_pca_plot(input_file,1,2,3)
 
-    #Test for get_xyz_for_specific_pc() function
-    #input_file = XYZFile('./Resources/malonaldehyde_IRC.xyz')
-    #comp = [1,2]
-    #get_xyz_for_specific_pc(input_file,comp)
+    # Test for get_xyz_for_specific_pc() function
+    # input_file = XYZFile('./Resources/malonaldehyde_IRC.xyz')
+    # comp = [1,2]
+    # get_xyz_for_specific_pc(input_file,comp)
