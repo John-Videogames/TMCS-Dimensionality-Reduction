@@ -50,6 +50,7 @@ class XYZFile:
         self.atom_types = None
         self.energy_frames = []
         self.frames = self.parse_xyz_file(filename, translate)
+        self.energy_frames = np.array(self.energy_frames)
         self.minimise_rmsd()
 
     def __str__(self):
@@ -122,7 +123,10 @@ class XYZFile:
                 :param
                 :return:
                 """
-        self.energy_frames.append(float(line.split()[8]))
+        try:
+            self.energy_frames.append(float(line.split()[8]))
+        except AttributeError:
+            self.energy_frames.append(None)
 
     @staticmethod
     def parse_one_frame(lines: list, translate):
@@ -216,3 +220,5 @@ if __name__ == "__main__":
     print(input_file.energy_frames)
     print(input_file.frames[0])
 
+    input_file_2 = XYZFile("./Resources/malonaldehyde_IRC.xyz")
+    print(input_file_2.energy_frames)

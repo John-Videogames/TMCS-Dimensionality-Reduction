@@ -107,7 +107,6 @@ if __name__ == "__main__":
     input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
     pca_res = pca_from_xyz("./Resources/malonaldehyde_IRC.xyz")
     print(pca_res.num_important_components(0.90))
-    input_file.energy_frames
     # Create PCA object with full PCA
     PCA_test = PCAResults(input_file)
     # Obtain variance for all PCA components as array
