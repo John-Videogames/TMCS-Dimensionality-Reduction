@@ -19,10 +19,10 @@ for possible_file in POSSIBLE_FILES:
         if subfile.startswith(basename):
             print("Rendering", subfile)
             filetext= f"""package require vmdmovie 
-                          display resize 512 512
-                          mol new ./Resources/{basename}{ext} waitfor all autobonds off
+                          display resize 400 400
+                          mol new ./Resources/components/{subfile} waitfor all autobonds off
                           axes location off
-                          mol representation DynamicBonds 1.5 0.2 24
+                          mol representation DynamicBonds 1.4 0.2 24
                           mol addrep top
                           mol representation CPK 1.0 24 0.3 24
                           mol addrep top
