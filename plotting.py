@@ -36,7 +36,6 @@ def energy_bar_pca_plot(XYZ_object, comp1, comp2, comp3 = None):
     PCA_object.transform_data()
     transformed_data = PCA_object.get_transformed_data()
     energy_data = XYZ_object.energy_frames
-    print(energy_data)
 
     if comp3 == None:
         plt.scatter(transformed_data[comp1-1],transformed_data[comp2-1], c=energy_data)
@@ -45,7 +44,12 @@ def energy_bar_pca_plot(XYZ_object, comp1, comp2, comp3 = None):
         cbar = plt.colorbar()
         cbar.set_label("energy in kcal", labelpad=+1)
         plt.plot(transformed_data[comp1-1],transformed_data[comp2-1])
-        plt.title("PC spanning a variance of %.3f" % (np.sum(PCA_object.get_comp_variance()[:2])))
+        # starting point
+        plt.scatter(transformed_data[comp1 - 1][0], transformed_data[comp2 - 1][0], marker="x", c="red", label = "start")
+        # end point
+        plt.scatter(transformed_data[comp1 - 1][-1], transformed_data[comp2 - 1][-1], marker="s", c="red", label = "end")
+        plt.legend()
+        plt.title(i[12:-4] +"\nPC spanning a variance of %.3f" % (np.sum(PCA_object.get_comp_variance()[:2])))
     else:
         fig = plt.figure()
         ax = Axes3D(fig)
@@ -56,9 +60,17 @@ def energy_bar_pca_plot(XYZ_object, comp1, comp2, comp3 = None):
         cbar = fig.colorbar(p)
         cbar.set_label("energy in kcal", labelpad=+1)
         ax.plot(transformed_data[comp1 - 1], transformed_data[comp2 - 1],transformed_data[comp3 - 1] )
-        ax.set_title("PC spanning a variance of %.3f" % (np.sum(PCA_object.get_comp_variance()[:3])))
-        
-    plt.show()
+        # starting point
+        ax.scatter(transformed_data[comp1 - 1][0], transformed_data[comp2 - 1][0],transformed_data[comp3 - 1][0], marker="x", c="red", label="start")
+        # end point
+        ax.scatter(transformed_data[comp1 - 1][-1], transformed_data[comp2 - 1][-1],transformed_data[comp3 - 1][-1], marker="s", c="red", label="end")
+        ax.legend()
+        ax.set_title(i[12:-4] +"\nPC spanning a variance of %.3f" % (np.sum(PCA_object.get_comp_variance()[:3])))
+
+    plt.savefig("output/" + i[12:-4] + ".pdf")
+    #plt.show()
+    plt.close()
+
 
 def get_xyz_for_specific_pc(XYZ_object, components):
     """
@@ -96,8 +108,12 @@ def plot_projections(possible_files, average_over_all=False):
 
 
 if __name__ == "__main__":
-    input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
-    pca_result = pca_from_xyz("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
+    #input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
+    #pca_result = pca_from_xyz("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
+
+    #plot_projections(POSSIBLE_FILES)
+    #plot_projections(POSSIBLE_FILES, True)
+    #input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
 
     plot_projections(POSSIBLE_FILES)
     plot_projections(POSSIBLE_FILES, True)
@@ -108,6 +124,13 @@ if __name__ == "__main__":
     # Test for energy_bar_pca_plot() function
     # input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
     # energy_bar_pca_plot(input_file,1,2,3)
+
+    for inputXYZ in POSSIBLE_FILES:
+        pca_result = pca_from_xyz(inputXYZ)
+        meaningful_components = pca_result.num_important_components(0.9)
+        print(meaningful_components)
+        get_xyz_for_specific_pc(XYZFile(inputXYZ),range(meaningful_components))
+
     #Test for energy_bar_pca_plot() function
     #input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
     #energy_bar_pca_plot(input_file,1,2)
@@ -116,3 +139,11 @@ if __name__ == "__main__":
     # input_file = XYZFile('./Resources/malonaldehyde_IRC.xyz')
     # comp = [1,2]
     # get_xyz_for_specific_pc(input_file,comp)
+    #Test for get_xyz_for_specific_pc() function
+    #input_file = XYZFile('./Resources/malonaldehyde_IRC.xyz')
+    #comp = [1,2]
+    #get_xyz_for_specific_pc(input_file,comp)
+
+    for i in POSSIBLE_FILES:
+        input_file = XYZFile(i)
+        energy_bar_pca_plot(input_file,1,2,3)
