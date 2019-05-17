@@ -29,5 +29,7 @@ def energy_pca_2D(XYZ_object, comp1, comp2, comp3 = None):
 
 if __name__ == "__main__":
     input_file = XYZFile("./Resources/trajectory_PCA_2019-05-16_03-03-39-PM.xyz")
+    pca_result = pca_from_xyz("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
+
 
     energy_pca_2D(input_file,1,2)

@@ -212,13 +212,14 @@ class XYZFile:
 if __name__ == "__main__":
     input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz",
                          translate=True)
-    print(input_file.atom_masses)
-    print(input_file.atom_labels)
-    print(input_file.atom_types)
-
-    print(input_file.num_atoms)
+    input_file = XYZFile("")
+    #print(input_file.atom_masses)
+    # print(input_file.atom_labels)
+    #print(input_file.atom_types)
     print(input_file.energy_frames)
-    print(input_file.frames[0])
+    #print(input_file.num_atoms)
+    #print(input_file.energy_frames)
+    #print(input_file.frames[0])
 
-    input_file_2 = XYZFile("./Resources/malonaldehyde_IRC.xyz")
-    print(input_file_2.energy_frames)
+   # input_file_2 = XYZFile("./Resources/malonaldehyde_IRC.xyz")
+   #  print(input_file_2.energy_frames)

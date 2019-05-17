@@ -33,7 +33,7 @@ class PCAResults:
         return self.pca.explained_variance_ratio_
     
     def get_nth_eigenvector(self, number):
-        """Retrun eigenvector number"""
+        """Return eigenvector number"""
         return self.pca.components_[number-1]
     
     def get_all_eigenvectors(self):
@@ -43,6 +43,8 @@ class PCAResults:
     def transform_data(self):
         """Transform data based on fit"""
         self.transformed_data = self.pca.transform(self.data)
+
+
 
     def get_transformed_data(self):
         """Return matrix of transformed data"""
