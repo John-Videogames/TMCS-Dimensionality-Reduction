@@ -90,7 +90,7 @@ def pca_from_xyz(xyz_filename: str) -> PCAResults:
     :return: 
     """
     in_xyz = XYZFile(xyz_filename)
-    pca_result = PCAResults(input_file)
+    pca_result = PCAResults(in_xyz)
     pca_result.transform_data()
     return pca_result
 
@@ -105,7 +105,9 @@ if __name__ == "__main__":
 
     # From preprocessing: create input_file
     input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz")
-
+    pca_res = pca_from_xyz("./Resources/malonaldehyde_IRC.xyz")
+    print(pca_res.num_important_components(0.90))
+    input_file.energy_frames
     # Create PCA object with full PCA
     PCA_test = PCAResults(input_file)
     # Obtain variance for all PCA components as array

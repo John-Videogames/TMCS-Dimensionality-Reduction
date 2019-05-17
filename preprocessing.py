@@ -115,7 +115,7 @@ class XYZFile:
         assert len(atom_types) == self.num_atoms, f"Did not find {self.num_atoms} atomic types."
         return atom_types
 
-    def appendEnergy(self,line):
+    def appendEnergy(self, line):
         """
                 Appends to energy_frames  the energy of each frame
                 :param lines:
@@ -123,8 +123,6 @@ class XYZFile:
                 :return:
                 """
         self.energy_frames.append(float(line.split()[8]))
-
-
 
     @staticmethod
     def parse_one_frame(lines: list, translate):
@@ -181,7 +179,10 @@ class XYZFile:
                 frame = self.parse_one_frame(frame_lines, translate)
                 frames[i, :] = frame
                 assert len(frame_lines) == self.num_atoms
-                self.appendEnergy(lines[i * (self.num_atoms + xyz_header_lines) + 1])
+                try:
+                    self.appendEnergy(lines[i * (self.num_atoms + xyz_header_lines) + 1])
+                except IndexError:
+                    self.appendEnergy(None)
 
         return frames
 
@@ -205,7 +206,8 @@ class XYZFile:
 
 
 if __name__ == "__main__":
-    input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz", translate=True)
+    input_file = XYZFile("./Resources/trajectory_2019-05-16_03-03-39-PM.xyz",
+                         translate=True)
     print(input_file.atom_masses)
     print(input_file.atom_labels)
     print(input_file.atom_types)
