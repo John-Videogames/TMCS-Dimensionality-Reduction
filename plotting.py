@@ -152,6 +152,7 @@ if __name__ == "__main__":
     #comp = [1,2]
     #get_xyz_for_specific_pc(input_file,comp)
 
+    plt.close()
     for i in POSSIBLE_FILES:
         input_file = XYZFile(i)
         energy_bar_pca_plot(input_file,1,2)
