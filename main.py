@@ -18,6 +18,7 @@ POSSIBLE_FILES = ['./Resources/trajectory_2019-05-16_03-49-27-PM.xyz',
                   './Resources/trajectory_2019-05-16_03-04-45-PM.xyz']
 
 if __name__ == "__main__":
+
     for file in POSSIBLE_FILES:
         input_file = XYZFile('./Resources/trajectory_2019-05-16_03-49-27-PM.xyz')
         PCA_test = PCAResults(input_file)

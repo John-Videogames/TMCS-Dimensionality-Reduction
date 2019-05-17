@@ -80,6 +80,21 @@ class PCAResults:
         """Return inverse transformed vector in original XYZ coordinates for a specific PCA component"""
         return np.dot(self.get_transformed_data().T[:, component - 1].reshape(-1,1), self.pca.components_[component-1].reshape(1,-1)) + self.pca.mean_
 
+
+def pca_from_xyz(xyz_filename: str) -> PCAResults:
+    """
+    Turns an xyz filename into
+    a transformed PCA result
+    :type xyz_filename: str
+    :param xyz_filename: 
+    :return: 
+    """
+    in_xyz = XYZFile(xyz_filename)
+    pca_result = PCAResults(input_file)
+    pca_result.transform_data()
+    return pca_result
+
+
 if __name__ == "__main__":
 
     ###########################################
@@ -116,7 +131,7 @@ if __name__ == "__main__":
     input_file.frames = PCA_test_2.get_inversetransform_data()
     input_file.write_out("./Resources/trajectory_PCA_2019-05-16_03-03-39-PM.xyz")
 
-    #Get one specific inverse transform
+    # Get one specific inverse transform
     input_file.frames = PCA_test_2.get_specific_inversetransformed_component(2)
     input_file.write_out("PCA_out_test2.xyz")
 
